@@ -1,0 +1,5 @@
+(library
+ (public_name snabbdom)
+ (js_of_ocaml
+  (javascript_files ../js/snabbdom.bundle.js))
+ (libraries brr))
