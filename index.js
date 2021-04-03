@@ -4,7 +4,6 @@ var fs = require('fs');
 
 browserify()
     .add('./js/snabbdom.js')
-    .plugin('common-shakeify')
     .transform(babelify, {
         'global': true,
         'presets': [
@@ -15,5 +14,6 @@ browserify()
             }]
         ]
     })
+    .plugin('tinyify', { flat: false })
     .bundle()
     .pipe(fs.createWriteStream('./js/snabbdom.bundle.js'))
