@@ -28,6 +28,26 @@ let () =
   let tick () =
     Vnode.h2 Jv.null [ Vnode.text (Date.to_locale_time_string (Date.now ())) ]
   in
+  let svg_node =
+    Vnode.make_node
+      "svg"
+      (Jv.obj [| "attrs", Jv.obj [| "width", Jv.of_int 100; "height", Jv.of_int 100 |] |])
+      [ Vnode.make_node
+          "circle"
+          (Jv.obj
+             [| ( "attrs"
+                , Jv.obj
+                    [| "cx", Jv.of_int 50
+                     ; "cy", Jv.of_int 50
+                     ; "r", Jv.of_int 40
+                     ; "stroke", Jv.of_string "green"
+                     ; "stroke-width", Jv.of_int 4
+                     ; "fill", Jv.of_string "yello"
+                    |] )
+             |])
+          []
+      ]
+  in
   let make_counter count = Vnode.p Jv.null [ Vnode.text (Int.to_string count) ] in
   let count = ref 0 in
   let counter = ref (make_counter !count) in
@@ -43,7 +63,7 @@ let () =
       [ Vnode.text "Click me" ]
   in
   let h2 = ref (tick ()) in
-  patch (`Element container) (Vnode.div Jv.null [ h1; !h2; !counter; btn ]);
+  patch (`Element container) (Vnode.div Jv.null [ svg_node; h1; !h2; !counter; btn ]);
   ignore
     (G.set_interval ~ms:1000 (fun () ->
          let new_node = tick () in
