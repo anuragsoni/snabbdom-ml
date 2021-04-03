@@ -17,3 +17,7 @@ let text t = Jv.of_string t
 let br data = make_node "br" data []
 let hr data = make_node "hr" data []
 let div data children = make_node "div" data children
+let h1 data children = make_node "h1" data children
+let h2 data children = make_node "h2" data children
+let p data children = make_node "p" data children
+let button data children = make_node "button" data children

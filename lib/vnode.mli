@@ -10,3 +10,7 @@ val text : string -> t
 val br : create_without_children
 val hr : create_without_children
 val div : create_with_children
+val h1 : create_with_children
+val h2 : create_with_children
+val p : create_with_children
+val button : create_with_children
