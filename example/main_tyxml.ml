@@ -28,16 +28,18 @@ let () =
   let tick () = Html.(h2 [ txt (Date.to_locale_time_string (Date.now ())) ]) in
   let svg_node =
     Svg.(
-      circle
-        ~a:
-          [ a_cx (50., None)
-          ; a_cy (50., None)
-          ; a_r (40., None)
-          ; a_stroke (`Color ("green", None))
-          ; a_stroke_width (4., None)
-          ; a_fill (`Color ("yellow", None))
-          ]
-        [])
+      svg
+        [ circle
+            ~a:
+              [ a_cx (50., None)
+              ; a_cy (50., None)
+              ; a_r (40., None)
+              ; a_stroke (`Color ("green", None))
+              ; a_stroke_width (4., None)
+              ; a_fill (`Color ("yellow", None))
+              ]
+            []
+        ])
   in
   let make_counter count = Html.(p [ txt (Int.to_string count) ]) in
   let count = ref 0 in
