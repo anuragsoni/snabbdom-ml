@@ -42,7 +42,7 @@ let () =
                      ; "r", Jv.of_int 40
                      ; "stroke", Jv.of_string "green"
                      ; "stroke-width", Jv.of_int 4
-                     ; "fill", Jv.of_string "yello"
+                     ; "fill", Jv.of_string "yellow"
                     |] )
              |])
           []
