@@ -1,4 +1,4 @@
-(executable
- (name main)
+(executables
+ (names main main_tyxml)
  (modes js)
- (libraries js_of_ocaml snabbdom))
+ (libraries js_of_ocaml snabbdom snabbdom.tyxml))
