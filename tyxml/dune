@@ -1,4 +1,4 @@
 (library
  (name snabbdom_tyxml)
- (public_name snabbdom.tyxml)
+ (public_name snabbdom-tyxml)
  (libraries snabbdom tyxml.functor))

@@ -27,9 +27,8 @@ let () =
   let open Snabbdom_tyxml in
   let tick () = Html.(h2 [ txt (Date.to_locale_time_string (Date.now ())) ]) in
   let svg_node =
-    Svg.(
-      svg
-        [ circle
+      Html.svg
+        Svg.[ circle
             ~a:
               [ a_cx (50., None)
               ; a_cy (50., None)
@@ -39,7 +38,7 @@ let () =
               ; a_fill (`Color ("yellow", None))
               ]
             []
-        ])
+        ]
   in
   let make_counter count = Html.(p [ txt (Int.to_string count) ]) in
   let count = ref 0 in
