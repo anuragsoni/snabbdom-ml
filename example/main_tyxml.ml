@@ -1,5 +1,5 @@
 open Brr
-open Snabbdom
+open Snabbdom_tyxml
 
 module Date = struct
   let date = Jv.get Jv.global "Date"
@@ -14,21 +14,21 @@ let () =
     | None -> assert false
   in
   let patch =
-    M.(
-      init
+    Snabbdom.init
+      Snabbdom.M.
         [ attributes_module
         ; class_module
         ; props_module
         ; event_listeners_module
         ; style_module
         ; dataset_module
-        ])
+        ]
   in
-  let open Snabbdom_tyxml in
   let tick () = Html.(h2 [ txt (Date.to_locale_time_string (Date.now ())) ]) in
   let svg_node =
-      Html.svg
-        Svg.[ circle
+    Html.svg
+      Svg.
+        [ circle
             ~a:
               [ a_cx (50., None)
               ; a_cy (50., None)
@@ -46,22 +46,23 @@ let () =
   let on_click _ev =
     incr count;
     let new_counter = make_counter !count in
-    patch (`Vnode !counter) new_counter;
+    patch (`Vnode (Html.toelt !counter)) (Html.toelt new_counter);
     counter := new_counter
   in
   let timer = ref (tick ()) in
   ignore
     (G.set_interval ~ms:1000 (fun () ->
          let new_node = tick () in
-         patch (`Vnode !timer) new_node;
+         patch (`Vnode (Html.toelt !timer)) (Html.toelt new_node);
          timer := new_node));
   patch
     (`Element container)
     Html.(
-      div
-        [ svg_node
-        ; h1 [ txt "Hello World" ]
-        ; !timer
-        ; !counter
-        ; button ~a:[ a_onclick on_click ] [ txt "Click Me" ]
-        ])
+      toelt
+      @@ div
+           [ svg_node
+           ; h1 [ txt "Hello World" ]
+           ; !timer
+           ; !counter
+           ; button ~a:[ a_onclick on_click ] [ txt "Click Me" ]
+           ])
