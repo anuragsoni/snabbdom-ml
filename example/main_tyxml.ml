@@ -14,8 +14,8 @@ let () =
     | None -> assert false
   in
   let patch =
-    Snabbdom.init
-      Snabbdom.M.
+    init
+      M.
         [ attributes_module
         ; class_module
         ; props_module
@@ -46,23 +46,23 @@ let () =
   let on_click _ev =
     incr count;
     let new_counter = make_counter !count in
-    patch (`Vnode (Html.toelt !counter)) (Html.toelt new_counter);
+    patch (`Html !counter) (`Html new_counter);
     counter := new_counter
   in
   let timer = ref (tick ()) in
   ignore
     (G.set_interval ~ms:1000 (fun () ->
          let new_node = tick () in
-         patch (`Vnode (Html.toelt !timer)) (Html.toelt new_node);
+         patch (`Html !timer) (`Html new_node);
          timer := new_node));
   patch
     (`Element container)
     Html.(
-      toelt
-      @@ div
+      `Html
+        (div
            [ svg_node
            ; h1 [ txt "Hello World" ]
            ; !timer
            ; !counter
            ; button ~a:[ a_onclick on_click ] [ txt "Click Me" ]
-           ])
+           ]))

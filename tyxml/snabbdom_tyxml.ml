@@ -1,3 +1,5 @@
+module M = Snabbdom.M
+
 module Xml_vnode = struct
   open Snabbdom
   module W = Xml_wrap.NoWrap
@@ -82,3 +84,17 @@ end
 
 module Svg = Svg_f.Make (Svg_vnode)
 module Html = Html_f.Make (Xml_vnode) (Svg)
+
+let init modules =
+  let patch = Snabbdom.init modules in
+  fun container node ->
+    let container =
+      match container with
+      | `Element _ as res -> res
+      | `Html n | `Svg n -> `Vnode n
+    in
+    let vnode =
+      match node with
+      | `Html n | `Svg n -> n
+    in
+    patch container vnode
