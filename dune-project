@@ -13,3 +13,12 @@
     (ocaml
       (>= 4.08.0))
     ))
+
+(package
+  (name snabbdom-tyxml)
+  (depends
+    brr
+    (ocaml
+      (>= 4.08.0))
+    tyxml
+    ))
