@@ -1,10 +1,15 @@
 import { h, init, classModule, propsModule, eventListenersModule, styleModule, attributesModule, datasetModule } from 'snabbdom';
 
-global.h = h
-global.classModule = classModule
-global.init = init
-global.propsModule = propsModule
-global.eventListenersModule = eventListenersModule
-global.styleModule = styleModule
-global.attributesModule = attributesModule
-global.datasetModule = datasetModule
+const snabbDom = {
+  h: h,
+  classModule: classModule,
+  propsModule: propsModule,
+  eventListenersModule: eventListenersModule,
+  styleModule: styleModule,
+  attributesModule: attributesModule,
+  datasetModule: datasetModule,
+  init: init
+};
+
+module.export = snabbDom;
+global.SnabbDom = snabbDom;
