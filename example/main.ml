@@ -24,46 +24,37 @@ let () =
         ; dataset_module
         ])
   in
-  let h1 = Vnode.h1 Jv.null [ Vnode.text "Hello World" ] in
-  let tick () =
-    Vnode.h2 Jv.null [ Vnode.text (Date.to_locale_time_string (Date.now ())) ]
-  in
+  let h1 = Vnode.h1 [] [ Vnode.text "Hello World" ] in
+  let tick () = Vnode.h2 [] [ Vnode.text (Date.to_locale_time_string (Date.now ())) ] in
   let svg_node =
     Vnode.make_node
       "svg"
-      (Jv.obj [| "attrs", Jv.obj [| "width", Jv.of_int 100; "height", Jv.of_int 100 |] |])
+      Attr.[ int "width" 100; int "height" 100 ]
       [ Vnode.make_node
           "circle"
-          (Jv.obj
-             [| ( "attrs"
-                , Jv.obj
-                    [| "cx", Jv.of_int 50
-                     ; "cy", Jv.of_int 50
-                     ; "r", Jv.of_int 40
-                     ; "stroke", Jv.of_string "green"
-                     ; "stroke-width", Jv.of_int 4
-                     ; "fill", Jv.of_string "yellow"
-                    |] )
-             |])
+          Attr.
+            [ int "cx" 50
+            ; int "cy" 50
+            ; int "r" 40
+            ; string "stroke" "green"
+            ; int "stroke-width" 4
+            ; string "fill" "yellow"
+            ]
           []
       ]
   in
-  let make_counter count = Vnode.p Jv.null [ Vnode.text (Int.to_string count) ] in
+  let make_counter count = Vnode.p [] [ Vnode.text (Int.to_string count) ] in
   let count = ref 0 in
   let counter = ref (make_counter !count) in
-  let on_click () =
+  let on_click _ =
     incr count;
     let new_counter = make_counter !count in
     patch (`Vnode !counter) new_counter;
     counter := new_counter
   in
-  let btn =
-    Vnode.button
-      (Jv.obj [| "on", Jv.obj [| "click", Jv.repr on_click |] |])
-      [ Vnode.text "Click me" ]
-  in
+  let btn = Vnode.button Attr.[ click on_click ] [ Vnode.text "Click me" ] in
   let h2 = ref (tick ()) in
-  patch (`Element container) (Vnode.div Jv.null [ svg_node; h1; !h2; !counter; btn ]);
+  patch (`Element container) (Vnode.div [] [ svg_node; h1; !h2; !counter; btn ]);
   ignore
     (G.set_interval ~ms:1000 (fun () ->
          let new_node = tick () in
