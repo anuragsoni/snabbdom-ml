@@ -12,6 +12,7 @@ module M = struct
   let dataset_module = get_global "datasetModule"
 end
 
+module Attr = Attr
 module Vnode = Vnode
 
 let init modules =

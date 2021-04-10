@@ -2,8 +2,8 @@ type t
 
 val to_jv : t -> Jv.t
 
-type create_with_children = Jv.t -> t list -> t
-type create_without_children = Jv.t -> t
+type create_with_children = Attr.t list -> t list -> t
+type create_without_children = Attr.t list -> t
 
 val make_node : string -> create_with_children
 val text : string -> t

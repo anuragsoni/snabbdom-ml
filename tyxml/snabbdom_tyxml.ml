@@ -15,59 +15,36 @@ module Xml_vnode = struct
   type mouse_event_handler = Brr.Ev.Mouse.t Brr.Ev.t -> unit
   type keyboard_event_handler = Brr.Ev.Keyboard.t Brr.Ev.t -> unit
   type touch_event_handler = Jv.t -> unit
-  type attrib = [ `Event of string | `Attr of string ] * Jv.t
+  type attrib = Attr.t
 
-  let float_attrib name f = `Attr name, Jv.of_float f
-  let int_attrib name f = `Attr name, Jv.of_int f
-  let string_attrib name f = `Attr name, Jv.of_string f
-  let space_sep_attrib name xs = `Attr name, Jv.of_string (String.concat " " xs)
-  let comma_sep_attrib name xs = `Attr name, Jv.of_string (String.concat "," xs)
-  let event_handler_attrib name handler = `Event name, Jv.repr handler
-  let mouse_event_handler_attrib name handler = `Event name, Jv.repr handler
-  let touch_event_handler_attrib name handler = `Event name, Jv.repr handler
-  let keyboard_event_handler_attrib name handler = `Event name, Jv.repr handler
-  let uri_attrib name value = `Attr name, Jv.of_string value
-  let uris_attrib name values = `Attr name, Jv.of_string (String.concat " " values)
+  (* TODO: This is just temporary to verify that this approach can work. Tyxml sends
+     events like [onclick] but snabbdom expects keys like [click] *)
+  let make_event_name name = String.sub name 2 (String.length name - 2)
+  let float_attrib name f = Attr.float name f
+  let int_attrib name f = Attr.int name f
+  let string_attrib name f = Attr.string name f
+  let space_sep_attrib name xs = string_attrib name (String.concat " " xs)
+  let comma_sep_attrib name xs = string_attrib name (String.concat "," xs)
+  let event_handler_attrib name handler = Attr.unsafe_event (make_event_name name) handler
+
+  let mouse_event_handler_attrib name handler =
+    Attr.mouse_event (make_event_name name) handler
+
+  let touch_event_handler_attrib name handler =
+    Attr.unsafe_event (make_event_name name) handler
+
+  let keyboard_event_handler_attrib name handler =
+    Attr.keyboard_event (make_event_name name) handler
+
+  let uri_attrib name value = string_attrib name value
+  let uris_attrib name values = string_attrib name (String.concat " " values)
 
   type aname = string
   type elt = Vnode.t
   type ename = string
 
-  module StringSet = Set.Make (struct
-    type t = string
-
-    let compare a b =
-      let a = String.lowercase_ascii a in
-      let b = String.lowercase_ascii b in
-      String.compare a b
-  end)
-
-  let attributes_to_skip = StringSet.of_list [ "xmlns"; "xmlns:xlink" ]
-
-  let make_attrs (a : attrib list option) =
-    match a with
-    | None -> Jv.null
-    | Some attrs ->
-      let events, attrs =
-        List.fold_left
-          (fun (events, attrs) t ->
-            match t with
-            | `Attr name, v ->
-              if StringSet.mem name attributes_to_skip
-              then events, attrs
-              else events, (name, v) :: attrs
-            (* TODO: This is just temporary to verify that this approach can work. Tyxml
-               sends events like [onclick] but snabbdom expects keys like [click] *)
-            | `Event name, v ->
-              (String.sub name 2 (String.length name - 2), v) :: events, attrs)
-          ([], [])
-          attrs
-      in
-      Jv.obj
-        [| "attrs", Jv.obj (Array.of_list attrs); "on", Jv.obj (Array.of_list events) |]
-
-  let leaf ?a name = Vnode.make_node name (make_attrs a) []
-  let node ?a name children = Vnode.make_node name (make_attrs a) children
+  let leaf ?(a = []) name = Vnode.make_node name a []
+  let node ?(a = []) name children = Vnode.make_node name a children
   let empty () = assert false
   let comment _c = assert false
   let pcdata = Vnode.text
